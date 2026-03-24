@@ -1,0 +1,291 @@
+{
+  "info": {
+    "name": "MiniSpotify",
+    "_postman_id": "minispotify-collection",
+    "description": "Coleção gerada a partir dos controllers Spring Boot do MiniSpotify",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ],
+  "item": [
+    {
+      "name": "Artistas",
+      "item": [
+        {
+          "name": "Criar Artista",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/artistas", "host": ["{{baseUrl}}"], "path": ["artistas"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Nome do Artista\",\n  \"generoMusical\": \"Pop\",\n  \"paisOrigem\": \"Brasil\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Artistas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/artistas", "host": ["{{baseUrl}}"], "path": ["artistas"] }
+          }
+        },
+        {
+          "name": "Buscar Artista por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/artistas/1", "host": ["{{baseUrl}}"], "path": ["artistas", "1"] }
+          }
+        },
+        {
+          "name": "Atualizar Artista",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/artistas/1", "host": ["{{baseUrl}}"], "path": ["artistas", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Nome Atualizado\",\n  \"generoMusical\": \"Rock\",\n  \"paisOrigem\": \"Brasil\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Deletar Artista",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/artistas/1", "host": ["{{baseUrl}}"], "path": ["artistas", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Álbuns",
+      "item": [
+        {
+          "name": "Criar Álbum",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/albuns", "host": ["{{baseUrl}}"], "path": ["albuns"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Nome do Álbum\",\n  \"dataLancamento\": \"2024-01-01\",\n  \"artista\": { \"id\": 1 }\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Álbuns",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/albuns", "host": ["{{baseUrl}}"], "path": ["albuns"] }
+          }
+        },
+        {
+          "name": "Buscar Álbum por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/albuns/1", "host": ["{{baseUrl}}"], "path": ["albuns", "1"] }
+          }
+        },
+        {
+          "name": "Atualizar Álbum",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/albuns/1", "host": ["{{baseUrl}}"], "path": ["albuns", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Título Atualizado\",\n  \"dataLancamento\": \"2024-06-01\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Deletar Álbum",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/albuns/1", "host": ["{{baseUrl}}"], "path": ["albuns", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Músicas",
+      "item": [
+        {
+          "name": "Criar Música",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/musicas", "host": ["{{baseUrl}}"], "path": ["musicas"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Nome da Música\",\n  \"duracaoSegundos\": 210,\n  \"numeroFaixa\": 1,\n  \"album\": { \"id\": 1 },\n  \"artista\": { \"id\": 1 }\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Músicas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/musicas", "host": ["{{baseUrl}}"], "path": ["musicas"] }
+          }
+        },
+        {
+          "name": "Buscar Música por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/musicas/1", "host": ["{{baseUrl}}"], "path": ["musicas", "1"] }
+          }
+        },
+        {
+          "name": "Atualizar Música",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/musicas/1", "host": ["{{baseUrl}}"], "path": ["musicas", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Título Atualizado\",\n  \"duracaoSegundos\": 240,\n  \"numeroFaixa\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "Deletar Música",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/musicas/1", "host": ["{{baseUrl}}"], "path": ["musicas", "1"] }
+          }
+        },
+        {
+          "name": "Reproduzir Música",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "X-USER-ID", "value": "1" }],
+            "url": { "raw": "{{baseUrl}}/musicas/1/reproduzir", "host": ["{{baseUrl}}"], "path": ["musicas", "1", "reproduzir"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuários",
+      "item": [
+        {
+          "name": "Criar Usuário",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/usuarios", "host": ["{{baseUrl}}"], "path": ["usuarios"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@email.com\",\n  \"tipoPlano\": \"FREE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Usuários",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/usuarios", "host": ["{{baseUrl}}"], "path": ["usuarios"] }
+          }
+        },
+        {
+          "name": "Buscar Usuário por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/usuarios/1", "host": ["{{baseUrl}}"], "path": ["usuarios", "1"] }
+          }
+        },
+        {
+          "name": "Atualizar Usuário",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/usuarios/1", "host": ["{{baseUrl}}"], "path": ["usuarios", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Atualizado\",\n  \"email\": \"joao.novo@email.com\",\n  \"tipoPlano\": \"PREMIUM\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Deletar Usuário",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/usuarios/1", "host": ["{{baseUrl}}"], "path": ["usuarios", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Playlists",
+      "item": [
+        {
+          "name": "Criar Playlist",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/playlists", "host": ["{{baseUrl}}"], "path": ["playlists"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Minha Playlist\",\n  \"publica\": true,\n  \"usuario\": { \"id\": 1 }\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Playlists",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/playlists", "host": ["{{baseUrl}}"], "path": ["playlists"] }
+          }
+        },
+        {
+          "name": "Buscar Playlist por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/playlists/1", "host": ["{{baseUrl}}"], "path": ["playlists", "1"] }
+          }
+        },
+        {
+          "name": "Atualizar Playlist",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/playlists/1", "host": ["{{baseUrl}}"], "path": ["playlists", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Playlist Atualizada\",\n  \"publica\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Deletar Playlist",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/playlists/1", "host": ["{{baseUrl}}"], "path": ["playlists", "1"] }
+          }
+        },
+        {
+          "name": "Adicionar Música à Playlist",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "X-USER-ID", "value": "1" }],
+            "url": { "raw": "{{baseUrl}}/playlists/1/musicas/1", "host": ["{{baseUrl}}"], "path": ["playlists", "1", "musicas", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Relatórios",
+      "item": [
+        {
+          "name": "Top 10 Músicas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/relatorios/top-musicas", "host": ["{{baseUrl}}"], "path": ["relatorios", "top-musicas"] }
+          }
+        }
+      ]
+    }
+  ]
+}
