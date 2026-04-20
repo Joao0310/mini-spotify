@@ -2,6 +2,7 @@ package com.joao.minispotify.controller;
 
 import com.joao.minispotify.entidades.Playlist;
 import com.joao.minispotify.service.PlaylistService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,43 +11,45 @@ import java.util.List;
 @RequestMapping("/playlists")
 public class PlaylistController {
 
-    private PlaylistService service;
+    private final PlaylistService service;
 
     public PlaylistController(PlaylistService service) {
         this.service = service;
     }
 
     @PostMapping
-    public Playlist criar(@RequestBody Playlist playlist) {
-        return service.criar(playlist);
+    public ResponseEntity<Playlist> criar(@RequestBody Playlist playlist) {
+        return ResponseEntity.status(201).body(service.criar(playlist));
     }
 
     @GetMapping
-    public List<Playlist> listar() {
-        return service.listar();
+    public ResponseEntity<List<Playlist>> listar() {
+        return ResponseEntity.ok(service.listar());
     }
 
     @GetMapping("/{id}")
-    public Playlist buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    public ResponseEntity<Playlist> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public Playlist atualizar(@PathVariable Long id, @RequestBody Playlist playlist) {
-        return service.atualizar(id, playlist);
+    public ResponseEntity<Playlist> atualizar(@PathVariable Long id, @RequestBody Playlist playlist) {
+        return ResponseEntity.ok(service.atualizar(id, playlist));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{playlistId}/musicas/{musicaId}")
-    public void adicionarMusica(
+    public ResponseEntity<Void> adicionarMusica(
             @PathVariable Long playlistId,
             @PathVariable Long musicaId,
             @RequestHeader("X-USER-ID") Long usuarioId
     ) {
         service.adicionarMusica(playlistId, musicaId, usuarioId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -11,9 +11,9 @@ import java.util.List;
 @Service
 public class PlaylistService {
 
-    private PlaylistRepository repository;
-    private UsuarioService usuarioService;
-    private MusicaService musicaService;
+    private final PlaylistRepository repository;
+    private final UsuarioService usuarioService;
+    private final MusicaService musicaService;
 
     public PlaylistService(PlaylistRepository repository,
                            UsuarioService usuarioService,
@@ -24,8 +24,7 @@ public class PlaylistService {
     }
 
     public Playlist criar(Playlist playlist) {
-
-        if (playlist.getNome() == null || playlist.getNome().isEmpty()) {
+        if (playlist.getNome() == null || playlist.getNome().isBlank()) {
             throw new RuntimeException("Nome é obrigatório");
         }
 
@@ -34,18 +33,18 @@ public class PlaylistService {
         }
 
         Usuario usuario = usuarioService.buscarPorId(playlist.getUsuario().getId());
+        playlist.setUsuario(usuario);
+        playlist.setAtivo(true);
 
-        if (!usuario.isAtivo()) {
-            throw new RuntimeException("Usuário inativo");
+        if (playlist.getMusicas() == null) {
+            playlist.setMusicas(new java.util.ArrayList<>());
         }
 
-        playlist.setUsuario(usuario);
-
-        return repository.salvar(playlist);
+        return repository.save(playlist);
     }
 
     public Playlist buscarPorId(Long id) {
-        Playlist playlist = repository.buscarPorId(id)
+        Playlist playlist = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Playlist não encontrada"));
 
         if (!playlist.isAtivo()) {
@@ -56,44 +55,28 @@ public class PlaylistService {
     }
 
     public List<Playlist> listar() {
-        return repository.listar()
-                .stream()
-                .filter(Playlist::isAtivo)
-                .toList();
+        return repository.findByAtivoTrue();
     }
 
     public void deletar(Long id) {
-        buscarPorId(id);
-        repository.deletar(id);
+        Playlist playlist = buscarPorId(id);
+        playlist.setAtivo(false);
+        repository.save(playlist);
     }
 
     public Playlist atualizar(Long id, Playlist atualizada) {
-
         Playlist playlist = buscarPorId(id);
 
         playlist.setNome(atualizada.getNome());
         playlist.setPublica(atualizada.isPublica());
 
-        return playlist;
+        return repository.save(playlist);
     }
 
     public void adicionarMusica(Long playlistId, Long musicaId, Long usuarioId) {
-
         Playlist playlist = buscarPorId(playlistId);
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
         Musica musica = musicaService.buscarPorId(musicaId);
-
-        if (!playlist.isAtivo()) {
-            throw new RuntimeException("Playlist inativa");
-        }
-
-        if (!usuario.isAtivo()) {
-            throw new RuntimeException("Usuário inativo");
-        }
-
-        if (!musica.isAtivo()) {
-            throw new RuntimeException("Música inativa");
-        }
 
         if (!playlist.getUsuario().getId().equals(usuarioId)) {
             throw new RuntimeException("Usuário não é dono da playlist");
@@ -104,5 +87,6 @@ public class PlaylistService {
         }
 
         playlist.adicionarMusica(musica);
+        repository.save(playlist);
     }
 }

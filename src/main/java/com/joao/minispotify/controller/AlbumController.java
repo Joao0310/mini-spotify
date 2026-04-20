@@ -2,6 +2,7 @@ package com.joao.minispotify.controller;
 
 import com.joao.minispotify.entidades.Album;
 import com.joao.minispotify.service.AlbumService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,34 +11,35 @@ import java.util.List;
 @RequestMapping("/albuns")
 public class AlbumController {
 
-    private AlbumService service;
+    private final AlbumService service;
 
     public AlbumController(AlbumService service) {
         this.service = service;
     }
 
     @PostMapping
-    public Album criar(@RequestBody Album album) {
-        return service.criarAlbum(album);
+    public ResponseEntity<Album> criar(@RequestBody Album album) {
+        return ResponseEntity.status(201).body(service.criarAlbum(album));
     }
 
     @GetMapping
-    public List<Album> listar() {
-        return service.listar();
+    public ResponseEntity<List<Album>> listar() {
+        return ResponseEntity.ok(service.listar());
     }
 
     @GetMapping("/{id}")
-    public Album buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    public ResponseEntity<Album> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public Album atualizar(@PathVariable Long id, @RequestBody Album album) {
-        return service.atualizar(id, album);
+    public ResponseEntity<Album> atualizar(@PathVariable Long id, @RequestBody Album album) {
+        return ResponseEntity.ok(service.atualizar(id, album));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -2,6 +2,7 @@ package com.joao.minispotify.controller;
 
 import com.joao.minispotify.entidades.Musica;
 import com.joao.minispotify.service.MusicaService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,42 +11,44 @@ import java.util.List;
 @RequestMapping("/musicas")
 public class MusicaController {
 
-    private MusicaService service;
+    private final MusicaService service;
 
     public MusicaController(MusicaService service) {
         this.service = service;
     }
 
     @PostMapping
-    public Musica criar(@RequestBody Musica musica) {
-        return service.criarMusica(musica);
+    public ResponseEntity<Musica> criar(@RequestBody Musica musica) {
+        return ResponseEntity.status(201).body(service.criarMusica(musica));
     }
 
     @GetMapping
-    public List<Musica> listar() {
-        return service.listar();
+    public ResponseEntity<List<Musica>> listar() {
+        return ResponseEntity.ok(service.listar());
     }
 
     @GetMapping("/{id}")
-    public Musica buscarPorId(@PathVariable Long id) {
-        return service.buscarPorId(id);
+    public ResponseEntity<Musica> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @PutMapping("/{id}")
-    public Musica atualizar(@PathVariable Long id, @RequestBody Musica musica) {
-        return service.atualizar(id, musica);
+    public ResponseEntity<Musica> atualizar(@PathVariable Long id, @RequestBody Musica musica) {
+        return ResponseEntity.ok(service.atualizar(id, musica));
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/reproduzir")
-    public void reproduzir(
+    public ResponseEntity<Void> reproduzir(
             @PathVariable Long id,
             @RequestHeader("X-USER-ID") Long usuarioId
     ) {
         service.reproduzir(id, usuarioId);
+        return ResponseEntity.noContent().build();
     }
 }

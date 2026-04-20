@@ -10,8 +10,8 @@ import java.util.List;
 @Service
 public class AlbumService {
 
-    private AlbumRepository repository;
-    private ArtistaService artistaService;
+    private final AlbumRepository repository;
+    private final ArtistaService artistaService;
 
     public AlbumService(AlbumRepository repository, ArtistaService artistaService) {
         this.repository = repository;
@@ -19,24 +19,23 @@ public class AlbumService {
     }
 
     public Album criarAlbum(Album album) {
-
-        if (album.getTitulo() == null || album.getTitulo().isEmpty()) {
+        if (album.getTitulo() == null || album.getTitulo().isBlank()) {
             throw new RuntimeException("Título é obrigatório");
         }
-        Long artistaId = album.getArtista().getId();
 
-        Artista artista = artistaService.buscarPorId(artistaId);
-
-        if (!artista.isAtivo()) {
-            throw new RuntimeException("Artista inativo");
+        if (album.getArtista() == null || album.getArtista().getId() == null) {
+            throw new RuntimeException("Artista é obrigatório");
         }
 
+        Artista artista = artistaService.buscarPorId(album.getArtista().getId());
         album.setArtista(artista);
-        return repository.salvar(album);
+        album.setAtivo(true);
+
+        return repository.save(album);
     }
 
     public Album buscarPorId(Long id) {
-        Album album = repository.buscarPorId(id)
+        Album album = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Álbum não encontrado"));
 
         if (!album.isAtivo()) {
@@ -47,15 +46,13 @@ public class AlbumService {
     }
 
     public List<Album> listar() {
-        return repository.listar()
-                .stream()
-                .filter(Album::isAtivo)
-                .toList();
+        return repository.findByAtivoTrue();
     }
 
     public void deletar(Long id) {
-        buscarPorId(id); // valida
-        repository.deletar(id);
+        Album album = buscarPorId(id);
+        album.setAtivo(false);
+        repository.save(album);
     }
 
     public Album atualizar(Long id, Album atualizado) {
@@ -64,6 +61,11 @@ public class AlbumService {
         album.setTitulo(atualizado.getTitulo());
         album.setDataLancamento(atualizado.getDataLancamento());
 
-        return album;
+        if (atualizado.getArtista() != null && atualizado.getArtista().getId() != null) {
+            Artista artista = artistaService.buscarPorId(atualizado.getArtista().getId());
+            album.setArtista(artista);
+        }
+
+        return repository.save(album);
     }
 }

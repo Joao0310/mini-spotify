@@ -12,10 +12,10 @@ import java.util.List;
 @Service
 public class MusicaService {
 
-    private MusicaRepository repository;
-    private AlbumService albumService;
-    private ArtistaService artistaService;
-    private UsuarioService usuarioService;
+    private final MusicaRepository repository;
+    private final AlbumService albumService;
+    private final ArtistaService artistaService;
+    private final UsuarioService usuarioService;
 
     public MusicaService(MusicaRepository repository,
                          AlbumService albumService,
@@ -28,8 +28,7 @@ public class MusicaService {
     }
 
     public Musica criarMusica(Musica musica) {
-
-        if (musica.getTitulo() == null || musica.getTitulo().isEmpty()) {
+        if (musica.getTitulo() == null || musica.getTitulo().isBlank()) {
             throw new RuntimeException("Título é obrigatório");
         }
 
@@ -44,22 +43,18 @@ public class MusicaService {
         Album album = albumService.buscarPorId(musica.getAlbum().getId());
         Artista artista = artistaService.buscarPorId(musica.getArtista().getId());
 
-        if (!album.isAtivo()) {
-            throw new RuntimeException("Álbum inativo");
-        }
-
-        if (!artista.isAtivo()) {
-            throw new RuntimeException("Artista inativo");
-        }
-
         musica.setAlbum(album);
         musica.setArtista(artista);
+        musica.setAtivo(true);
+        if (musica.getTotalReproducoes() == null) {
+            musica.setTotalReproducoes(0L);
+        }
 
-        return repository.salvar(musica);
+        return repository.save(musica);
     }
 
     public Musica buscarPorId(Long id) {
-        Musica musica = repository.buscarPorId(id)
+        Musica musica = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Música não encontrada"));
 
         if (!musica.isAtivo()) {
@@ -70,51 +65,36 @@ public class MusicaService {
     }
 
     public List<Musica> listar() {
-        return repository.listar()
-                .stream()
-                .filter(Musica::isAtivo)
-                .toList();
+        return repository.findByAtivoTrue();
     }
 
     public void deletar(Long id) {
-        buscarPorId(id);
-        repository.deletar(id);
+        Musica musica = buscarPorId(id);
+        musica.setAtivo(false);
+        repository.save(musica);
     }
 
     public Musica atualizar(Long id, Musica atualizada) {
-
         Musica musica = buscarPorId(id);
 
         musica.setTitulo(atualizada.getTitulo());
         musica.setDuracaoSegundos(atualizada.getDuracaoSegundos());
         musica.setNumeroFaixa(atualizada.getNumeroFaixa());
 
-        // opcional: atualizar album e artista (nível mais avançado)
         if (atualizada.getAlbum() != null && atualizada.getAlbum().getId() != null) {
             Album album = albumService.buscarPorId(atualizada.getAlbum().getId());
-
-            if (!album.isAtivo()) {
-                throw new RuntimeException("Álbum inativo");
-            }
-
             musica.setAlbum(album);
         }
 
         if (atualizada.getArtista() != null && atualizada.getArtista().getId() != null) {
             Artista artista = artistaService.buscarPorId(atualizada.getArtista().getId());
-
-            if (!artista.isAtivo()) {
-                throw new RuntimeException("Artista inativo");
-            }
-
             musica.setArtista(artista);
         }
 
-        return musica;
+        return repository.save(musica);
     }
 
     public void reproduzir(Long musicaId, Long usuarioId) {
-
         Musica musica = buscarPorId(musicaId);
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
 
@@ -123,6 +103,6 @@ public class MusicaService {
         }
 
         musica.incrementarReproducoes();
+        repository.save(musica);
     }
-
 }

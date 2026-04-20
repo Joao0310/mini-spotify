@@ -8,23 +8,23 @@ import java.util.List;
 
 @Service
 public class ArtistaService {
-    private ArtistaRepository repository;
+
+    private final ArtistaRepository repository;
 
     public ArtistaService(ArtistaRepository repository) {
         this.repository = repository;
     }
 
     public Artista criarArtista(Artista artista) {
-
-        if (artista.getNome() == null || artista.getNome().isEmpty()) {
+        if (artista.getNome() == null || artista.getNome().isBlank()) {
             throw new RuntimeException("Nome é obrigatório");
         }
 
-        return repository.salvar(artista);
+        return repository.save(artista);
     }
 
     public Artista buscarPorId(Long id) {
-        Artista artista = repository.buscarPorId(id)
+        Artista artista = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Artista não encontrado"));
 
         if (!artista.isAtivo()) {
@@ -35,14 +35,13 @@ public class ArtistaService {
     }
 
     public List<Artista> listar() {
-        return repository.listar().stream()
-                .filter(Artista::isAtivo)
-                .toList();
+        return repository.findByAtivoTrue();
     }
 
     public void deletar(Long id) {
-        buscarPorId(id); // valida se existe
-        repository.deletar(id);
+        Artista artista = buscarPorId(id);
+        artista.setAtivo(false);
+        repository.save(artista);
     }
 
     public Artista atualizar(Long id, Artista artistaAtualizado) {
@@ -52,6 +51,6 @@ public class ArtistaService {
         artista.setGeneroMusical(artistaAtualizado.getGeneroMusical());
         artista.setPaisOrigem(artistaAtualizado.getPaisOrigem());
 
-        return artista;
+        return repository.save(artista);
     }
 }

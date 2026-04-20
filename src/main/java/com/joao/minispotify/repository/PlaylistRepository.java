@@ -1,35 +1,10 @@
 package com.joao.minispotify.repository;
 
 import com.joao.minispotify.entidades.Playlist;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.*;
+import java.util.List;
 
-@Repository
-public class PlaylistRepository {
-
-    private Map<Long, Playlist> banco = new HashMap<>();
-    private Long contador = 1L;
-
-    public Playlist salvar(Playlist playlist) {
-        playlist.setId(contador);
-        banco.put(contador, playlist);
-        contador++;
-        return playlist;
-    }
-
-    public List<Playlist> listar() {
-        return new ArrayList<>(banco.values());
-    }
-
-    public Optional<Playlist> buscarPorId(Long id) {
-        return Optional.ofNullable(banco.get(id));
-    }
-
-    public void deletar(Long id) {
-        Playlist playlist = banco.get(id);
-        if (playlist != null) {
-            playlist.setAtivo(false);
-        }
-    }
+public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
+    List<Playlist> findByAtivoTrue();
 }

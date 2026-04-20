@@ -1,4 +1,4 @@
-package com.joao.minispotify.entidades;
+package com.joao.minispotify.dto;
 
 public class Top10 {
 
